@@ -1,7 +1,9 @@
 package kayllian.c1tappydefender;
 
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Display;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -11,7 +13,12 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        gameView = new TDView(this);
+        // Gets the screen size of the android device.
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        gameView = new TDView(this, size.x, size.y);
         setContentView(gameView);
     }
 

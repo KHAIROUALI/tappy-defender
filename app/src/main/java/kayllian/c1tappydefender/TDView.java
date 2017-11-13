@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -21,11 +22,11 @@ public class TDView extends SurfaceView implements Runnable {
     private Canvas canvas;
     private SurfaceHolder ourHolder;
 
-    public TDView(Context context) {
+    public TDView(Context context, int x, int y) {
         super(context);
         ourHolder =  getHolder();
         paint = new Paint();
-        player = new PlayerShip(context);
+        player = new PlayerShip(context, x, y);
     }
 
     @Override
@@ -74,10 +75,23 @@ public class TDView extends SurfaceView implements Runnable {
         }
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent motionEvent){
+        int action = motionEvent.getAction();
+        switch(action & MotionEvent.ACTION_MASK){
+            case MotionEvent.ACTION_UP:
+                player.stopBoosting();
+                break;
+            case MotionEvent.ACTION_DOWN:
+                player.boost();
+                break;
+        }
+
+        return true;
+    }
+
     private void update() {
         player.update();
     }
-
-
 
 }
