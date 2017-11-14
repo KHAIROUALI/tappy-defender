@@ -21,12 +21,17 @@ public class TDView extends SurfaceView implements Runnable {
     private Paint paint;
     private Canvas canvas;
     private SurfaceHolder ourHolder;
+    private EnemyShip[] enemies;
 
     public TDView(Context context, int x, int y) {
         super(context);
         ourHolder =  getHolder();
         paint = new Paint();
         player = new PlayerShip(context, x, y);
+        enemies = new EnemyShip[3];
+
+        for (int i = 0; i < enemies.length; i++)
+            enemies[i] = new EnemyShip(context, x, y);
     }
 
     @Override
@@ -70,7 +75,10 @@ public class TDView extends SurfaceView implements Runnable {
             canvas.drawColor(Color.argb(255, 0, 0, 0));
 
             canvas.drawBitmap(player.getBitmap(), player.getX(), player.getY(), paint);
-
+            for (int i = 0; i < enemies.length; i ++) {
+                EnemyShip enemy = enemies[i];
+                canvas.drawBitmap(enemy.getBitmap(), enemy.getX(), enemy.getY(), paint);
+            }
             ourHolder.unlockCanvasAndPost(canvas);
         }
     }
@@ -92,6 +100,9 @@ public class TDView extends SurfaceView implements Runnable {
 
     private void update() {
         player.update();
+        for (int i = 0; i < enemies.length; i++){
+            enemies[i].update(player.getSpeed());
+        }
     }
 
 }
