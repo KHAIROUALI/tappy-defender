@@ -8,6 +8,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+
 /**
  * Created by dvan_ on 11/10/2017.
  * The view for the Tappy Defender
@@ -22,6 +24,7 @@ public class TDView extends SurfaceView implements Runnable {
     private Canvas canvas;
     private SurfaceHolder ourHolder;
     private EnemyShip[] enemies;
+    private ArrayList<SpaceDust> dust = new ArrayList<>();
 
     public TDView(Context context, int x, int y) {
         super(context);
@@ -32,6 +35,12 @@ public class TDView extends SurfaceView implements Runnable {
 
         for (int i = 0; i < enemies.length; i++)
             enemies[i] = new EnemyShip(context, x, y);
+
+        int numSpecs = 40;
+        for(int i = 0; i < numSpecs; i++){
+            SpaceDust spec = new SpaceDust(x, y);
+            dust.add(spec);
+        }
     }
 
     @Override
@@ -79,6 +88,12 @@ public class TDView extends SurfaceView implements Runnable {
                 EnemyShip enemy = enemies[i];
                 canvas.drawBitmap(enemy.getBitmap(), enemy.getX(), enemy.getY(), paint);
             }
+
+            paint.setColor(Color.argb(255, 255, 255, 255));
+            for(SpaceDust particle : dust) {
+                canvas.drawPoint(particle.getX(), particle.getY(), paint);
+            }
+
             ourHolder.unlockCanvasAndPost(canvas);
         }
     }
@@ -100,8 +115,13 @@ public class TDView extends SurfaceView implements Runnable {
 
     private void update() {
         player.update();
+
         for (int i = 0; i < enemies.length; i++){
             enemies[i].update(player.getSpeed());
+        }
+
+        for(SpaceDust particle : dust) {
+            particle.update(player.getSpeed());
         }
     }
 
